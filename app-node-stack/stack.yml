@@ -1,0 +1,24 @@
+services:
+  api:
+    image: fercdevv/swarm-api:v1
+    ports:
+      - 7000:7000
+    deploy:
+      update_config:
+        parallelism: 1
+        delay: 5s
+    
+    configs:
+      - source: app_config
+        target: /run/configs/app_config.json
+    
+    secrets:
+      - api_key
+
+configs:
+  app_config:
+    file: ./configs/app_config.json
+
+secrets:
+  api_key:
+    external: true
