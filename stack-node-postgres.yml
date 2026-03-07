@@ -1,0 +1,25 @@
+services:
+  api:
+    image: node:20-alpine
+    command: sleep infinity
+    ports:
+      - 3000:3000
+    deploy:
+      replicas: 2
+    networks:
+      - backend
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_PASSWORD: admin123
+
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    
+    networks:
+      - backend
+
+networks:
+  backend:
+volumes:
+  dbdata:

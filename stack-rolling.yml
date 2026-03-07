@@ -1,0 +1,14 @@
+
+services:
+  web:
+    image: nginx:latest
+
+    deploy:
+      replicas: 4
+
+      update_config:
+        parallelism: 2 # la cantidad de containers en que se van a actualizar
+        delay: 5s     # el tiempo de espera para continuar con el siguiente contendor (en actualizacion)
+        failure_action: rollback # (pause-contine-rollback) que hacer si la actualizacion falla
+       # monitor: 30s # monitor sirve para definir el tiempo en que se va a monitorear e indicar si el nuevo container falla o no
+       # max_failure_ratio: 0.25  # 20% de contenedores que puede fallar

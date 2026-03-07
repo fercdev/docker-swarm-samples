@@ -1,0 +1,23 @@
+services:
+  
+  manager:
+    image: docker:dind
+    privileged: true
+    container_name: manager
+    networks:
+      - swarm_net
+  worker1:
+    image: docker:dind
+    privileged: true
+    container_name: worker1
+    networks:
+      - swarm_net
+  worker2:
+    image: docker:dind
+    privileged: true
+    container_name: worker2
+    networks:
+      - swarm_net
+
+networks:
+  swarm_net:
