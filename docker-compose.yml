@@ -6,18 +6,29 @@ services:
     container_name: manager
     networks:
       - swarm_net
+    volumes:
+      - manager_data:/var/lib/docker
   worker1:
     image: docker:dind
     privileged: true
     container_name: worker1
     networks:
       - swarm_net
+    volumes:
+      - worker1_data:/var/lib/docker
   worker2:
     image: docker:dind
     privileged: true
     container_name: worker2
     networks:
       - swarm_net
+    volumes:
+      - worker2_data:/var/lib/docker
 
 networks:
   swarm_net:
+
+volumes:
+  manager_data:
+  worker1_data:
+  worker2_data:
