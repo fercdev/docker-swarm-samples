@@ -1,0 +1,12 @@
+services:
+  api:
+    image: alpine
+    command: sh -c "cat /app/config/app.conf && sleep infinity"
+
+    configs:
+      - source: app_config
+        target: /app/config/app.conf
+
+configs:
+  app_config:
+    file: ./configs/app.conf
