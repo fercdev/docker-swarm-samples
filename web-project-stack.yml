@@ -1,0 +1,61 @@
+services:
+  compose_mysql:
+    image: fercdevv/mysql-project-paths:latest
+    environment:
+      MYSQL_ROOT_PASSWORD_FILE_PATH: /run/secrets/MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: demo_db
+      MYSQL_USER: demo_user
+      MYSQL_PASSWORD_FILE_PATH: /run/secrets/MYSQL_PASSWORD
+    volumes:
+      - compose-mysql-data:/var/lib/mysql
+    secrets:
+      - MYSQL_ROOT_PASSWORD
+      - MYSQL_PASSWORD
+    networks:
+      - compose_network
+    ports:
+      - 3307:3306
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 30s
+      retries: 3
+      start_period: 10s
+  backend:
+    image: fercdevv/backend-project:latest
+    depends_on:
+      - compose_mysql
+    environment:
+      DB_HOST: compose_mysql
+      DB_NAME: demo_db
+      DB_USER: demo_user
+      DB_PASS: demo_pass
+      DB_PORT: 3306
+    networks:
+      - compose_network
+    ports:
+      - 5001:4000
+    deploy:
+      replicas: 2
+      restart_policy:
+        condition: on-failure
+
+networks:
+  compose_network:
+    driver: overlay
+
+volumes:
+  compose-mysql-data:
+
+secrets:
+  MYSQL_ROOT_PASSWORD:
+    external: true
+  MYSQL_PASSWORD:
+    external: true
