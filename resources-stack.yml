@@ -1,0 +1,16 @@
+services:
+  tester:
+    image: busybox:latest
+    command: ["sh", "-c", "echo '--archivo--config' && cat /test_config.conf && echo '--secret--' && cat /run/secrets/test_secret && sleep 3600"]
+    configs:
+      - source: test_config
+        target: /test_config.conf
+    secrets:
+      - test_secret
+configs:
+  test_config:
+    external: true
+
+secrets:
+  test_secret:
+    external: true
