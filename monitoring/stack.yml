@@ -1,0 +1,54 @@
+services:
+  prometheus:
+    image: prom/prometheus
+    volumes:
+      - prometheus-data:/prometheus
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    networks:
+      - monitor-red
+    ports:
+      - 9090:9090
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - grafana-data:/var/lib/grafana
+    networks:
+      - monitor-red
+    ports:
+      - 3000:3000
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
+  node_exporter:
+    image: prom/node-exporter
+    networks:
+      - monitor-red
+    deploy:
+      mode: global
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+  cadvisor:
+    image: gcr.io/cadvisor/cadvisor
+    networks:
+      - monitor-red
+    deploy:
+      mode: global
+    volumes:
+      - /:/rootfs:ro
+      - /var/run:/var/run:ro
+      - /sys:/sys:ro
+      - /var/lib/docker:/var/lib/docker:ro
+networks:
+  monitor-red:
+    driver: overlay
+
+volumes:
+  prometheus-data:
+  grafana-data:

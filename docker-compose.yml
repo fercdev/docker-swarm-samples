@@ -11,6 +11,8 @@ services:
       - 9081:8082
       - 3308:3307
       - 9091:5001
+      - 9070:9090 #prometheus
+      - 9071:3000 #grafana
     volumes:
       - manager_data:/var/lib/docker
       - manager_stacks_data:/home/devops/stacks
