@@ -9,6 +9,8 @@ services:
     ports:
       - 9080:8080
       - 9081:8082
+      - 3308:3307
+      - 9091:5001
     volumes:
       - manager_data:/var/lib/docker
   worker1:
@@ -17,6 +19,8 @@ services:
     container_name: worker1
     networks:
       - swarm_net
+    ports:
+      - 9092:5001
     volumes:
       - worker1_data:/var/lib/docker
   worker2:
@@ -25,6 +29,8 @@ services:
     container_name: worker2
     networks:
       - swarm_net
+    ports:
+      - 9093:5001
     volumes:
       - worker2_data:/var/lib/docker
 
