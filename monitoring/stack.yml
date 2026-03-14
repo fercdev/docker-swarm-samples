@@ -29,7 +29,7 @@ services:
     networks:
       - monitor-red
     deploy:
-      mode: global
+      mode: global   # mode global util para lo siguiente (agent logging, monitoring, security)
     volumes:
       - /proc:/host/proc:ro
       - /sys:/host/sys:ro

@@ -29,6 +29,12 @@ services:
         reservations:
           cpus: "0.25"
           memory: 256M
+      labels:
+        app: web_project
+        service: compose_mysql
+        environment: test
+        team: devops
+        version: "1.0"
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${MYSQL_ROOT_PASSWORD}"]
       interval: 10s
@@ -52,7 +58,13 @@ services:
     deploy:
       replicas: 2
       restart_policy:
-        condition: on-failure
+        condition: on-failure   # recomendaciones (none -> default | on-failure | any)
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
       resources:
         limits:
           cpus: "0.5"
@@ -60,7 +72,12 @@ services:
         reservations:
           cpus: "0.25"
           memory: 256M
-
+      labels:
+        app: web_project
+        service: backend
+        environment: test
+        team: devops
+        version: "1.0"
 networks:
   compose_network:
     driver: overlay

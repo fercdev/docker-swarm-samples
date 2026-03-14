@@ -1,0 +1,52 @@
+services:
+  api:
+    image: fercdevv/swarm-node-server:latest
+    networks:
+      - swarm-api
+    secrets:
+      - MYSQL_ROOT_PASSWORD
+    configs:
+      - source: api_config
+        target: /app/config.json
+    
+    environment:
+      DB_PASSWORD_FILE: /run/secrets/MYSQL_ROOT_PASSWORD
+
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: "0.5"
+          memory: "256M"
+        reservations:
+          cpus: "0.25"
+          memory: "128M"
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+      update_config:
+        parallelism: 1
+        delay: 10s
+        failure_action: rollback
+      placement:
+        constraints:
+          - node.role == worker
+        max_replicas_per_node: 1
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:6000/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+networks:
+  swarm-api:
+    driver: overlay
+
+secrets:
+  MYSQL_ROOT_PASSWORD:
+    external: true
+
+configs:
+  api_config:
+    file: ./configs/config.json
