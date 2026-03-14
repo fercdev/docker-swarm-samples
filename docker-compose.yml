@@ -13,6 +13,7 @@ services:
       - 9091:5001
     volumes:
       - manager_data:/var/lib/docker
+      - manager_stacks_data:/home/devops/stacks
   worker1:
     image: docker:dind
     privileged: true
@@ -41,3 +42,4 @@ volumes:
   manager_data:
   worker1_data:
   worker2_data:
+  manager_stacks_data:
